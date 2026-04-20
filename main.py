@@ -1,25 +1,16 @@
 import streamlit as st
-import yfinance as yf
-import matplotlib.pyplot as plt
+from apps.app_finance import app_finance
+from components.login import login_page
 
-# Title
-st.title("Apple Stock Time Series")
+if __name__ == "__main__":
 
-# Fetch data for Apple (AAPL)
-ticker = "AAPL"
-data = yf.download(ticker, period="1y")
+    st.set_page_config(layout="wide")
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    if not st.session_state.logged_in:
+        login_page()
+    elif "logged_in" in st.session_state:
+        app_finance()
 
-# Show raw data
-st.subheader("Raw Data")
-st.write(data.tail())
 
-# Plot closing price
-st.subheader("Closing Price Over Time")
 
-fig, ax = plt.subplots()
-ax.plot(data.index, data["Close"])
-ax.set_xlabel("Date")
-ax.set_ylabel("Price (USD)")
-ax.set_title("AAPL Closing Price")
-
-st.pyplot(fig)
